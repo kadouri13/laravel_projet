@@ -15,6 +15,17 @@ class Article extends Model
         'file_path',
         'status',
         'author_id',
+        'published_at',
+        'ai_decision',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'published_at' => 'datetime',
     ];
 
     public function author()

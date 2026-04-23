@@ -16,9 +16,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Articles
     Route::get('/articles', [ArticleController::class, 'index']);
+    Route::get('/articles/accepted', [ArticleController::class, 'getAccepted']);
     Route::get('/articles/{id}', [ArticleController::class, 'show']);
     Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:author,admin');
     Route::put('/articles/{id}/status', [ArticleController::class, 'updateStatus'])->middleware('role:admin,editor');
+
+    // AI Detector
+    Route::post('/articles/{id}/ai-detect', [\App\Http\Controllers\AiDetectorController::class, 'detect']);
 
     // Reviews
     Route::post('/articles/{id}/assign-reviewer', [ReviewController::class, 'assign'])->middleware('role:editor,admin');
