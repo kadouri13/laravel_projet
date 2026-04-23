@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Users
+    Route::get('/users/search', [\App\Http\Controllers\UserController::class, 'search']);
     Route::put('/users/{id}/make-reviewer', [\App\Http\Controllers\UserController::class, 'makeReviewer'])->middleware('role:admin');
 
     // Articles

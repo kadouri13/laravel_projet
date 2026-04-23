@@ -37,4 +37,38 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/users/search",
+     *     summary="Search users by name",
+     *     tags={"Users"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Name to search for",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of matching users",
+     *         @OA\JsonContent(type="array", @OA\Items(type="object"))
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function search(Request $request)
+    {
+        $name = $request->query('name');
+        
+        if (!$name) {
+            return response()->json([]);
+        }
+
+        $users = User::where('name', 'like', "%{$name}%")->get();
+        
+        return response()->json($users);
+    }
 }
