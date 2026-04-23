@@ -14,6 +14,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    // Users
+    Route::put('/users/{id}/make-reviewer', [\App\Http\Controllers\UserController::class, 'makeReviewer'])->middleware('role:admin');
+
     // Articles
     Route::get('/articles', [ArticleController::class, 'index']);
     Route::get('/articles/accepted', [ArticleController::class, 'getAccepted']);
