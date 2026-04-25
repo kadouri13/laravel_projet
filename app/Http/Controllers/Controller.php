@@ -21,6 +21,13 @@ use Illuminate\Routing\Controller as BaseController;
  *      url="http://localhost:8000/api",
  *      description="Demo API Server"
  * )
+ *
+ * @OA\SecurityScheme(
+ *      securityScheme="sanctum",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT"
+ * )
  */
 class Controller extends BaseController
 {
