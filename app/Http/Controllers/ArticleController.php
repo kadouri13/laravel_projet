@@ -31,7 +31,7 @@ class ArticleController extends Controller
         if ($user->role === 'author') {
             $articles = $query->where('author_id', $user->id)->get();
         } elseif ($user->role === 'reader') {
-            $articles = $query->where('status', 'published')->get();
+            $articles = $query->whereIn('status', ['accepted', 'published'])->get();
         } else {
             // Admins/Editors see everything + reviewers
             $articles = $query->get();
@@ -56,7 +56,7 @@ class ArticleController extends Controller
      */
     public function getAccepted(Request $request)
     {
-        $articles = Article::whereIn('status', ['accepted', 'published', 'submitted'])->with('author')->get();
+        $articles = Article::whereIn('status', ['accepted', 'published'])->with('author')->get();
         return response()->json($articles);
     }
 
