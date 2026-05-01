@@ -18,7 +18,7 @@ services:
       - key: APP_DEBUG
         value: false
       - key: APP_KEY
-        generateValue: true
+        value: "base64:8Hg+kbH7JCvnMRbTjIsajPpHPzEkGk30lNjB/9ZC+pE="
       - key: APP_URL
         value: https://laravel_app.onrender.com # Placeholder, automatically works on Render
       - key: DB_CONNECTION

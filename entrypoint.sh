@@ -24,6 +24,9 @@ echo "Setup complete. Configuring Apache port..."
 # Set Apache to listen on the port provided by Render (or default to 80)
 sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
+# Fix permissions after artisan commands
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
 echo "Starting Apache..."
 
 # Execute the default command provided by the apache image
