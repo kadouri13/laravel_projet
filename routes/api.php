@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Users
     Route::get('/users/search', [\App\Http\Controllers\UserController::class, 'search']);
     Route::put('/users/{id}/make-reviewer', [\App\Http\Controllers\UserController::class, 'makeReviewer'])->middleware('role:admin');
+    Route::put('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
 
     // Articles
     Route::get('/articles', [ArticleController::class, 'index']);

@@ -24,12 +24,17 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        
+        // We always include 'reviews.reviewer' so the dashboard knows who is assigned
+        $query = Article::with(['author', 'reviews.reviewer']);
+
         if ($user->role === 'author') {
-            $articles = Article::where('author_id', $user->id)->with('author')->get();
+            $articles = $query->where('author_id', $user->id)->get();
         } elseif ($user->role === 'reader') {
-            $articles = Article::where('status', 'published')->with('author')->get();
+            $articles = $query->where('status', 'published')->get();
         } else {
-            $articles = Article::with('author')->get();
+            // Admins/Editors see everything + reviewers
+            $articles = $query->get();
         }
 
         return response()->json($articles);
@@ -51,7 +56,7 @@ class ArticleController extends Controller
      */
     public function getAccepted(Request $request)
     {
-        $articles = Article::whereIn('status', ['accepted', 'published'])->with('author')->get();
+        $articles = Article::whereIn('status', ['accepted', 'published', 'submitted'])->with('author')->get();
         return response()->json($articles);
     }
 
@@ -109,13 +114,13 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'abstract' => 'required|string',
+            'file_path' => 'nullable|string', // 1. Add this to validation
         ]);
-
-        // File upload handling could go here
 
         $article = Article::create([
             'title' => $validated['title'],
             'abstract' => $validated['abstract'],
+            'file_path' => $request->file_path, // 2. Add this to the creation array
             'author_id' => $request->user()->id,
             'status' => 'submitted',
         ]);

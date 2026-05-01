@@ -62,13 +62,43 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $name = $request->query('name');
-        
-        if (!$name) {
-            return response()->json([]);
+
+        $query = User::query();
+
+        if ($name) {
+            $query->where('name', 'like', "%{$name}%");
         }
 
-        $users = User::where('name', 'like', "%{$name}%")->get();
-        
-        return response()->json($users);
+        return response()->json($query->get());
+    }
+
+    public function update(Request $request, $id)
+    {
+        $authUser = $request->user();
+        $user = User::findOrFail($id);
+
+        // Prevent random users from editing others
+        if ($authUser->id !== $user->id && $authUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => "sometimes|string|email|max:255|unique:users,email,$id",
+            'password' => 'sometimes|string|min:8',
+            'profile_picture' => 'nullable|string',
+            'background' => 'nullable|string',
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
     }
 }
