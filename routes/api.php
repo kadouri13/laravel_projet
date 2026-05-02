@@ -23,8 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/articles', [ArticleController::class, 'index']);
     Route::get('/articles/accepted', [ArticleController::class, 'getAccepted']);
     Route::get('/articles/{id}', [ArticleController::class, 'show']);
-    Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:author,admin');
-    Route::put('/articles/{id}/status', [ArticleController::class, 'updateStatus'])->middleware('role:admin,editor');
+    Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:author,reviewer,admin');
+    Route::put('/articles/{id}/status', [ArticleController::class, 'updateStatus'])->middleware('role:admin,reviewer,editor');
 
     // AI Detector
     Route::post('/articles/{id}/ai-detect', [\App\Http\Controllers\AiDetectorController::class, 'detect']);

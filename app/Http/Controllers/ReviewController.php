@@ -135,9 +135,20 @@ class ReviewController extends Controller
         $review->status = 'completed';
         $review->save();
 
+        // Automatically update the article status based on the reviewer's decision
+        $article = Article::findOrFail($review->article_id);
+        if ($validated['decision'] === 'accepted') {
+            $article->status = 'accepted';
+            $article->save();
+        } elseif ($validated['decision'] === 'rejected') {
+            $article->status = 'rejected';
+            $article->save();
+        }
+
         return response()->json([
             'message' => 'Review submitted successfully',
-            'review' => $review
+            'review' => $review,
+            'article_status' => $article->status
         ]);
     }
 }
