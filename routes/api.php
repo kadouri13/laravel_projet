@@ -9,6 +9,7 @@ use App\Http\Controllers\CommentController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/articles/accepted', [ArticleController::class, 'getAccepted']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
@@ -17,11 +18,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Users
     Route::get('/users/search', [\App\Http\Controllers\UserController::class, 'search']);
     Route::put('/users/{id}/make-reviewer', [\App\Http\Controllers\UserController::class, 'makeReviewer'])->middleware('role:admin');
+    Route::put('/users/{id}/make-editor', [\App\Http\Controllers\UserController::class, 'makeEditor'])->middleware('role:admin');
     Route::put('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
 
     // Articles
     Route::get('/articles', [ArticleController::class, 'index']);
-    Route::get('/articles/accepted', [ArticleController::class, 'getAccepted']);
     Route::get('/articles/{id}', [ArticleController::class, 'show']);
     Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:author,reviewer,admin');
     Route::put('/articles/{id}/status', [ArticleController::class, 'updateStatus'])->middleware('role:admin,reviewer,editor');
